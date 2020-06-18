@@ -33,10 +33,10 @@
 {
     self = [super init];
     if (self) {
-        UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(54, 54, 20, 20)];
-        [img setImage:image];
+        self.checkImage = [[UIImageView alloc] initWithFrame:CGRectMake(54, 54, 20, 20)];
+        [self.checkImage setImage:image];
         
-        [self addSubview:img];
+        [self addSubview:self.checkImage];
         
         if ([[ELCConsole mainConsole] onOrder]) {
             self.labIndex = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 16, 16)];
