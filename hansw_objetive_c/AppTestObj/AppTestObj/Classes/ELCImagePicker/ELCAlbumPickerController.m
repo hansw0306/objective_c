@@ -58,9 +58,16 @@
                 if ([[sGroupPropertyName lowercaseString] isEqualToString:@"camera roll"] && nType == ALAssetsGroupSavedPhotos) {
                     [self.assetGroups insertObject:group atIndex:0];
                 }
-                else {
+                //2020.06.18 hansw 모든 엘범을 너어주지말고 특정지어서 넣어주도록 하자.
+                else if(nType == ALAssetsGroupSavedPhotos
+                        || nType == ALAssetsGroupAlbum
+                        || nType == ALAssetsGroupPhotoStream)
+                {
                     [self.assetGroups addObject:group];
                 }
+//                else {
+//                    [self.assetGroups addObject:group];
+//                }
 
                 // Reload albums
                 [self performSelectorOnMainThread:@selector(reloadTableView) withObject:nil waitUntilDone:YES];
