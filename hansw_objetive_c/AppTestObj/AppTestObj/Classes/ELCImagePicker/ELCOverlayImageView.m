@@ -33,7 +33,9 @@
 {
     self = [super init];
     if (self) {
-        UIImageView *img = [[UIImageView alloc] initWithImage:image];
+        UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(54, 54, 20, 20)];
+        [img setImage:image];
+        
         [self addSubview:img];
         
         if ([[ELCConsole mainConsole] onOrder]) {
@@ -52,7 +54,6 @@
     }
     return self;
 }
-
 
 
 
