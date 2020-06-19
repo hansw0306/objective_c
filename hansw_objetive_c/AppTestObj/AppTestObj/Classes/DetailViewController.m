@@ -15,14 +15,14 @@
 @implementation DetailViewController
 
 
-@synthesize imgView,detailData,pichImg,panImg;
+@synthesize imgView,imageData,pichImg,panImg;
 
 - (instancetype)initWithImage:(UIImage*)image
 {
     self = [super init];
     if(self)
     {
-        [self.imgView setImage:image];
+        imageData = image;
     }
     return self;
 }
@@ -40,25 +40,10 @@
     [imgView addGestureRecognizer:panImg];
     
     
-    if(detailData != nil)
+    if(imageData != nil)
     {
-         PHImageManager *manager = [PHImageManager defaultManager];
-         PHImageRequestOptions *option =[PHImageRequestOptions new];
-         option.synchronous = YES;
-         option.deliveryMode = YES;
-         
-         
-         [manager requestImageForAsset:detailData targetSize:PHImageManagerMaximumSize
-         contentMode:PHImageContentModeDefault options:option
-         resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-             imgView.image = result;
-             imgView.tag = 0;
-         }];
-
-         // 원본사이즈 그대로 가져오려면
-    //     targetSize:PHImageManagerMaximumSize
-    //    contentMode:PHImageContentModeDefault
-     }
+        imgView.image = imageData;
+    }
 }
 - (IBAction)panAction:(id)sender {
 

@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) IBOutlet UIPanGestureRecognizer *panImg;
 @property (strong, nonatomic) IBOutlet UIPinchGestureRecognizer *pichImg;
-@property (strong, nonatomic) PHAsset *detailData;
+@property (strong, nonatomic) UIImage *imageData;
 
 - (instancetype)initWithImage:(UIImage*)image;
 @end

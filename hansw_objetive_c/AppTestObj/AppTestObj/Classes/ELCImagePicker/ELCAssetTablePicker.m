@@ -6,10 +6,10 @@
 //
 
 #import "ELCAssetTablePicker.h"
-#import "ELCAssetCell.h"
 #import "ELCAsset.h"
 #import "ELCAlbumPickerController.h"
 #import "ELCConsole.h"
+#import "DetailViewController.h"
 
 @interface ELCAssetTablePicker ()
 
@@ -34,6 +34,9 @@
 
 - (void)viewDidLoad
 {
+    //hansw TablePicker View화며에 들어오면 이전에 있던 선택은 모두 제거한다.
+    [[ELCConsole mainConsole] removeAllIndex];
+    
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 	[self.tableView setAllowsSelection:NO];
 
@@ -63,7 +66,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[ELCConsole mainConsole] removeAllIndex];
+    //디테일 화면이 추가되어서 제거하고 viewDidLoad쪽에다가 작업을 옮겨주었다.
+    //[[ELCConsole mainConsole] removeAllIndex];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:ALAssetsLibraryChangedNotification object:nil];
 }
 
@@ -254,6 +258,7 @@
 
     if (cell == nil) {		        
         cell = [[ELCAssetCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.delegate = self;
     }
     
     [cell setAssets:[self assetsForIndexPath:indexPath]];
@@ -277,6 +282,16 @@
 	}
     
     return count;
+}
+
+
+#pragma mark ELCAssetCellDelegate Delegate Methods
+
+-(void) ELCAssetCellTouch:(UIImage *)image
+{
+    
+    DetailViewController *mDetailViewController = [[DetailViewController alloc] initWithImage:image];
+    [self.navigationController pushViewController:mDetailViewController animated:YES];
 }
 
 

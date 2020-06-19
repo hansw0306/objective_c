@@ -11,6 +11,8 @@
 #import "ELCOverlayImageView.h"
 #import <CoreLocation/CoreLocation.h>
 
+#import "DetailViewController.h"
+
 @interface ELCAssetCell ()
 
 @property (nonatomic, strong) NSArray *rowAssets;
@@ -117,8 +119,9 @@
                     asset.index = [[ELCConsole mainConsole] numOfSelectedElements];
                     [overlayView setIndex:asset.index];
                     asset.selected = !asset.selected;
+                    //Detail화면으로 이동하기 위해 Delegate를 추가하였다.
+                    [self.delegate ELCAssetCellTouch:[self GetAssetImage:asset]];
                     
-                    [self GoDetailView:asset];
                     
                 }
                 
@@ -163,7 +166,7 @@
 }
 
 
--(void)GoDetailView :(ELCAsset*)elcasset
+-(UIImage*)GetAssetImage :(ELCAsset*)elcasset
 {
 
     NSMutableArray *returnArray = [[NSMutableArray alloc] init];
@@ -173,7 +176,7 @@
         id obj = [asset valueForProperty:ALAssetPropertyType];
         if (!obj) {
             //continue;
-            return;;
+            return nil;
         }
         NSMutableDictionary *workingDictionary = [[NSMutableDictionary alloc] init];
         
@@ -202,11 +205,11 @@
                                                scale:1.0f
                                          orientation:orientation];
             
-            
+            return img;
         }
         
     
-    
+    return nil;
     
     
 }
