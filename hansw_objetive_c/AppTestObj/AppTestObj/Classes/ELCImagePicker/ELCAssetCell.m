@@ -9,6 +9,7 @@
 #import "ELCAsset.h"
 #import "ELCConsole.h"
 #import "ELCOverlayImageView.h"
+#import <CoreLocation/CoreLocation.h>
 
 @interface ELCAssetCell ()
 
@@ -69,7 +70,7 @@
             overlayView.labIndex.text = [NSString stringWithFormat:@"%d", asset.index + 1];
         } else {
             if (overlayImage == nil) {
-                overlayImage = [UIImage imageNamed:@"Overlay.png"];
+                overlayImage = [UIImage imageNamed:@"check_blue_01.png"];
             }
             ELCOverlayImageView *overlayView = [[ELCOverlayImageView alloc] initWithImage:overlayImage];
             [_overlayViewArray addObject:overlayView];
@@ -99,14 +100,32 @@
             ELCAsset *asset = [_rowAssets objectAtIndex:i];
             asset.selected = !asset.selected;
             ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
-            overlayView.hidden = !asset.selected;
+            
+            //hansw 2020.06.17 선택하였을때만 체크되도록
             if (asset.selected) {
-                asset.index = [[ELCConsole mainConsole] numOfSelectedElements];
-                [overlayView setIndex:asset.index+1];
-                [[ELCConsole mainConsole] addIndex:asset.index];
+                CGRect frameCell = overlayView.checkImage.frame;
+                CGPoint pointCell = [tapRecognizer locationInView:overlayView];
+                if (CGRectContainsPoint(frameCell, pointCell)){
+                    NSLog(@"터치됨");
+                    overlayView.hidden = !asset.selected;
+                    asset.index = [[ELCConsole mainConsole] numOfSelectedElements];
+                    [overlayView setIndex:asset.index+1];
+                    [[ELCConsole mainConsole] addIndex:asset.index];
+                }
+                else{
+                    NSLog(@"터치안됨");
+                    asset.index = [[ELCConsole mainConsole] numOfSelectedElements];
+                    [overlayView setIndex:asset.index];
+                    asset.selected = !asset.selected;
+                    
+                    
+                    
+                }
+                
             }
             else
             {
+                overlayView.hidden = !asset.selected;
                 int lastElement = [[ELCConsole mainConsole] numOfSelectedElements] - 1;
                 [[ELCConsole mainConsole] removeIndex:lastElement];
             }
@@ -143,5 +162,70 @@
 	}
 }
 
+
+-(void)GoDetailView :(NSMutableArray*)elcassets
+{
+    
+    NSMutableArray *selectedAssetsImages = [[NSMutableArray alloc] init];
+    
+    for (ELCAsset *elcAsset in elcassets) {
+        if ([elcAsset selected]) {
+            [selectedAssetsImages addObject:elcAsset];
+        }
+    }
+    if ([[ELCConsole mainConsole] onOrder]) {
+        [selectedAssetsImages sortUsingSelector:@selector(compareWithIndex:)];
+    }
+    //--------------------------------------------------------------------------------------------------------------
+    NSArray *assets = (NSArray*)selectedAssetsImages;
+    NSMutableArray *returnArray = [[NSMutableArray alloc] init];
+    
+    for(ELCAsset *elcasset in assets) {
+        ALAsset *asset = elcasset.asset;
+        id obj = [asset valueForProperty:ALAssetPropertyType];
+        if (!obj) {
+            continue;
+        }
+        NSMutableDictionary *workingDictionary = [[NSMutableDictionary alloc] init];
+        
+        CLLocation* wgs84Location = [asset valueForProperty:ALAssetPropertyLocation];
+        if (wgs84Location) {
+            [workingDictionary setObject:wgs84Location forKey:ALAssetPropertyLocation];
+        }
+        
+        [workingDictionary setObject:obj forKey:UIImagePickerControllerMediaType];
+        
+        //This method returns nil for assets from a shared photo stream that are not yet available locally. If the asset becomes available in the future, an ALAssetsLibraryChangedNotification notification is posted.
+        ALAssetRepresentation *assetRep = [asset defaultRepresentation];
+        
+        if(assetRep != nil) {
+            CGImageRef imgRef = nil;
+            //defaultRepresentation returns image as it appears in photo picker, rotated and sized,
+            //so use UIImageOrientationUp when creating our image below.
+            UIImageOrientation orientation = UIImageOrientationUp;
+            
+            
+            imgRef = [assetRep fullResolutionImage];
+            orientation = [assetRep orientation];
+            //imgRef = [assetRep fullScreenImage];
+            
+            UIImage *img = [UIImage imageWithCGImage:imgRef
+                                               scale:1.0f
+                                         orientation:orientation];
+            
+            
+            
+            
+        }
+        
+    }
+    
+    
+    
+}
+
+/*
+ 
+ */
 
 @end

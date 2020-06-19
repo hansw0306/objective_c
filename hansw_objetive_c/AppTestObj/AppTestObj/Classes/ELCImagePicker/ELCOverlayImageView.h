@@ -11,6 +11,7 @@
 @interface ELCOverlayImageView : UIImageView
 
 @property (nonatomic, strong) UILabel *labIndex;
+@property (nonatomic, strong) UIImageView *checkImage;
 
 - (void)setIndex:(int)_index;
 
