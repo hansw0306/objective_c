@@ -118,7 +118,7 @@
                     [overlayView setIndex:asset.index];
                     asset.selected = !asset.selected;
                     
-                    
+                    [self GoDetailView:asset];
                     
                 }
                 
@@ -163,28 +163,17 @@
 }
 
 
--(void)GoDetailView :(NSMutableArray*)elcassets
+-(void)GoDetailView :(ELCAsset*)elcasset
 {
-    
-    NSMutableArray *selectedAssetsImages = [[NSMutableArray alloc] init];
-    
-    for (ELCAsset *elcAsset in elcassets) {
-        if ([elcAsset selected]) {
-            [selectedAssetsImages addObject:elcAsset];
-        }
-    }
-    if ([[ELCConsole mainConsole] onOrder]) {
-        [selectedAssetsImages sortUsingSelector:@selector(compareWithIndex:)];
-    }
-    //--------------------------------------------------------------------------------------------------------------
-    NSArray *assets = (NSArray*)selectedAssetsImages;
+
     NSMutableArray *returnArray = [[NSMutableArray alloc] init];
     
-    for(ELCAsset *elcasset in assets) {
+    
         ALAsset *asset = elcasset.asset;
         id obj = [asset valueForProperty:ALAssetPropertyType];
         if (!obj) {
-            continue;
+            //continue;
+            return;;
         }
         NSMutableDictionary *workingDictionary = [[NSMutableDictionary alloc] init];
         
@@ -214,18 +203,32 @@
                                          orientation:orientation];
             
             
-            
-            
         }
         
-    }
+    
     
     
     
 }
 
-/*
- 
- */
+//겔러리에 이미지 저장
+-(void) SaveGallery:(UIImage*) saveImage
+{
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    [library writeImageToSavedPhotosAlbum:[saveImage CGImage] orientation:(ALAssetOrientation)[saveImage imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
+        if (error)
+        {
+            //Error
+            NSLog(@"실패");
+        }
+        else
+        {
+            //성공해서 파일을 지운다.
+            NSLog(@"성공");
+            
+        }
+    }];
+    //[library release];
+}
 
 @end
