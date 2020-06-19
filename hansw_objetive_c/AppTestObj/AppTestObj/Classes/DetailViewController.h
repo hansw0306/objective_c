@@ -18,5 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UIPinchGestureRecognizer *pichImg;
 @property (strong, nonatomic) PHAsset *detailData;
 
+- (instancetype)initWithImage:(UIImage*)image;
 @end
 NS_ASSUME_NONNULL_END

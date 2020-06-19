@@ -17,6 +17,15 @@
 
 @synthesize imgView,detailData,pichImg,panImg;
 
+- (instancetype)initWithImage:(UIImage*)image
+{
+    self = [super init];
+    if(self)
+    {
+        [self.imgView setImage:image];
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
